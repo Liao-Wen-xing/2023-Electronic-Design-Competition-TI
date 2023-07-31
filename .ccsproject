@@ -12,8 +12,8 @@
 	<createSlaveProjects value=""/>
 	<ignoreDefaultDeviceSettings value="true"/>
 	<ignoreDefaultCCSSettings value="true"/>
-	<templateProperties value="id=adc0_singleended_samplehold_singlechannel_singleseq_MSP_EXP432E401Y_nortos_ccs.projectspec.ADC,buildProfile=release,isHybrid=true"/>
-	<origin value="D:\TI\simplelink_msp432e4_sdk_3_40_01_02\examples\nortos\MSP_EXP432E401Y\driverlib\adc0_singleended_samplehold_singlechannel_singleseq\ccs\adc0_singleended_samplehold_singlechannel_singleseq_MSP_EXP432E401Y_nortos_ccs.projectspec"/>
+	<templateProperties value="id=adc0_singleended_multichannel_timertrigger_dmareq_MSP_EXP432E401Y_nortos_ccs.projectspec.ADC(official),buildProfile=release,isHybrid=true"/>
+	<origin value="D:\TI\simplelink_msp432e4_sdk_3_40_01_02\examples\nortos\MSP_EXP432E401Y\driverlib\adc0_singleended_multichannel_timertrigger_dmareq\ccs\adc0_singleended_multichannel_timertrigger_dmareq_MSP_EXP432E401Y_nortos_ccs.projectspec"/>
 	<filesToOpen value=""/>
 	<isTargetManual value="false"/>
 </projectOptions>

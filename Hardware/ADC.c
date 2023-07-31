@@ -3,63 +3,155 @@
 #include <stdbool.h>
 #include <ti/devices/msp432e4/driverlib/driverlib.h>
 #include "OLED.h"
-/*#include "driverlib/sysctl.h"
-#include "driverlib/gpio.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/adc.h"
-#include "inc/hw_memmap.h"
+//用了timer2
+/* The control table used by the uDMA controller.  This table must be aligned
+ * to a 1024 byte boundary. */
+#if defined(__ICCARM__)
+#pragma data_alignment=1024
+uint8_t pui8ControlTable[1024];
+#elif defined(__TI_ARM__)
+#pragma DATA_ALIGN(pui8ControlTable, 1024)
+uint8_t pui8ControlTable[1024];
+#else
+uint8_t pui8ControlTable[1024] __attribute__ ((aligned(1024)));
+#endif
+/*
+******PE3|<-- AIN0**+++
+******PE2|<-- AIN1**+++
+******PE1|<-- AIN2**+++
+******PE0|<-- AIN3**+++
 */
-
-// 定义ADC通道数量
-#define ADC_CHANNEL_COUNT 4
-
-// 定义ADC采样率
-#define ADC_SAMPLE_RATE 1000 // 1000Hz
-
-// 定义ADC采样数据缓冲区大小
-#define ADC_BUFFER_SIZE 100
-
-// 定义ADC通道配置数组
-const uint32_t adcChannels[ADC_CHANNEL_COUNT] = {
-    ADC_CTL_CH0, // 通道0
-    ADC_CTL_CH1, // 通道1
-    ADC_CTL_CH2, // 通道2
-    ADC_CTL_CH3  // 通道3
-};
-
-// 定义ADC数据缓冲区
-uint32_t adcBuffer[ADC_CHANNEL_COUNT][ADC_BUFFER_SIZE];
-
+extern uint32_t systemClock;
+volatile bool bgetConvStatus = false;;
+uint16_t srcBuffer[4];   //AIN0-AIN03
 // 初始化ADC
 void ADC_Configuration(void) {
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE); // 使能GPIOE外设时钟
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0); // 使能ADC0外设时钟
+    /* 开启GPIOE时钟*/
+    MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+    while(!(MAP_SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOE)))
+    {
+    }
+    /* 配置引脚输入模式 */
+    MAP_GPIOPinTypeADC(GPIO_PORTE_BASE, GPIO_PIN_3);
+    MAP_GPIOPinTypeADC(GPIO_PORTE_BASE, GPIO_PIN_2);
+    MAP_GPIOPinTypeADC(GPIO_PORTE_BASE, GPIO_PIN_1);
+    MAP_GPIOPinTypeADC(GPIO_PORTE_BASE, GPIO_PIN_0);
 
-    GPIOPinTypeADC(GPIO_PORTE_BASE, GPIO_PIN_3 | GPIO_PIN_2 | GPIO_PIN_1 | GPIO_PIN_0); // 配置PE3、PE2、PE1、PE0为模拟输入
+    /* 开启ADC0的时钟 */
+    MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
+    while(!(MAP_SysCtlPeripheralReady(SYSCTL_PERIPH_ADC0)))
+    {
+    }
+    /* 配置Sequencer 2以对模拟通道进行采样：AIN0-AIN3。这个
+        为AIN3设置转换和中断生成结束 */
+    MAP_ADCSequenceStepConfigure(ADC0_BASE, 2, 0, ADC_CTL_CH0);
+    MAP_ADCSequenceStepConfigure(ADC0_BASE, 2, 1, ADC_CTL_CH1);
+    MAP_ADCSequenceStepConfigure(ADC0_BASE, 2, 2, ADC_CTL_CH2);
+    MAP_ADCSequenceStepConfigure(ADC0_BASE, 2, 3, ADC_CTL_CH3 | ADC_CTL_IE |
+                                 ADC_CTL_END);
 
-    ADCSequenceConfigure(ADC0_BASE, 1, ADC_TRIGGER_PROCESSOR, 0);
-    ADCSequenceStepConfigure(ADC0_BASE, 1, 0, adcChannels[0] | ADC_CTL_IE | ADC_CTL_END);
-    ADCSequenceStepConfigure(ADC0_BASE, 1, 1, adcChannels[1] | ADC_CTL_IE | ADC_CTL_END);
-    ADCSequenceStepConfigure(ADC0_BASE, 1, 2, adcChannels[2] | ADC_CTL_IE | ADC_CTL_END);
-    ADCSequenceStepConfigure(ADC0_BASE, 1, 3, adcChannels[3] | ADC_CTL_IE | ADC_CTL_END);
-    ADCSequenceEnable(ADC0_BASE, 1);
-    ADCSequenceDMAEnable(ADC0_BASE, 1);
-    ADCIntEnable(ADC0_BASE, 1);
+    /* 使用定时器信号触发器启用采样序列2。序列器2
+        当计时器在超时时生成触发器时，将执行单个采样*/
+    MAP_ADCSequenceConfigure(ADC0_BASE, 2, ADC_TRIGGER_TIMER, 2);
+
+    /*启用前清除中断状态标志。这样做是为了确保在采样之前清除中断标志*/
+    MAP_ADCIntClearEx(ADC0_BASE, ADC_INT_DMA_SS2);
+    MAP_ADCIntEnableEx(ADC0_BASE, ADC_INT_DMA_SS2);
+
+    /* Enable the DMA request from ADC0 Sequencer 2 */
+    MAP_ADCSequenceDMAEnable(ADC0_BASE, 2);
+
+    /* Since sample sequence 2 is now configured, it must be enabled. */
+    MAP_ADCSequenceEnable(ADC0_BASE, 2);
+
+    /* Enable the Interrupt generation from the ADC-0 Sequencer */
+    MAP_IntEnable(INT_ADC0SS2);
+
+    /* Enable the DMA and Configure Channel for TIMER0A for Ping Pong mode of
+     * transfer */
+    MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_UDMA);
+    while(!(SysCtlPeripheralReady(SYSCTL_PERIPH_UDMA)))
+    {
+    }
+
+    MAP_uDMAEnable();
+
+    /* Point at the control table to use for channel control structures. */
+    MAP_uDMAControlBaseSet(pui8ControlTable);
+
+    /* Map the ADC0 Sequencer 2 DMA channel */
+    MAP_uDMAChannelAssign(UDMA_CH16_ADC0_2);
+
+    /* Put the attributes in a known state for the uDMA ADC0 Sequencer 2
+     * channel. These should already be disabled by default. */
+    MAP_uDMAChannelAttributeDisable(UDMA_CH16_ADC0_2,
+                                    UDMA_ATTR_ALTSELECT | UDMA_ATTR_USEBURST |
+                                    UDMA_ATTR_HIGH_PRIORITY |
+                                    UDMA_ATTR_REQMASK);
+
+    /* Configure the control parameters for the primary control structure for
+     * the ADC0 Sequencer 2 channel. The primary control structure is used for
+     * copying the data from ADC0 Sequencer 2 FIFO to srcBuffer. The transfer
+     * data size is 16 bits and the source address is not incremented while
+     * the destination address is incremented at 16-bit boundary.
+     */
+    MAP_uDMAChannelControlSet(UDMA_CH16_ADC0_2 | UDMA_PRI_SELECT,
+                              UDMA_SIZE_16 | UDMA_SRC_INC_NONE | UDMA_DST_INC_16 |
+                              UDMA_ARB_4);
+
+    /* Set up the transfer parameters for the ADC0 Sequencer 2 primary control
+     * structure. The mode is Basic mode so it will run to completion. */
+    MAP_uDMAChannelTransferSet(UDMA_CH16_ADC0_2 | UDMA_PRI_SELECT,
+                               UDMA_MODE_BASIC,
+                               (void *)&ADC0->SSFIFO2, (void *)&srcBuffer,
+                               sizeof(srcBuffer)/2);
+
+    /* The uDMA ADC0 Sequencer 2 channel is primed to start a transfer. As
+     * soon as the channel is enabled and the Timer will issue an ADC trigger,
+     * the ADC will perform the conversion and send a DMA Request. The data
+     * transfers will begin. */
+    MAP_uDMAChannelEnable(UDMA_CH16_ADC0_2);
+
+
+    /*定时器配置，注意防范冲突*/
+    /* Enable Timer-0 clock and configure the timer in periodic mode with
+     * a frequency of 1 KHz. Enable the ADC trigger generation from the
+     * timer-0. */
+    MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER2);
+    while(!(MAP_SysCtlPeripheralReady(SYSCTL_PERIPH_TIMER2)))
+    {
+    }
+
+    MAP_TimerConfigure(TIMER2_BASE, TIMER_CFG_A_PERIODIC);
+    MAP_TimerLoadSet(TIMER2_BASE, TIMER_A, (systemClock/1000));
+    MAP_TimerADCEventSet(TIMER2_BASE, TIMER_ADC_TIMEOUT_A);  //pay attention to "TIMER_ADC_TIMEOUT_A"
+    MAP_TimerControlTrigger(TIMER2_BASE, TIMER_A, true);
+    MAP_TimerEnable(TIMER2_BASE, TIMER_A);
 }
 
-// 获取ADC采样数据
-void ADC_GetData(void) {
-    ADCProcessorTrigger(ADC0_BASE, 1); // 启动ADC采样
-}
+void ADC0SS2_IRQHandler(void)
+{
+    uint32_t getIntStatus;
 
-// 处理ADC采样数据
-void ADC_ProcessData(void) {
-    uint32_t i, j;
+    /* Get the interrupt status from the ADC */
+    getIntStatus = MAP_ADCIntStatusEx(ADC0_BASE, true);
 
-    for (i = 0; i < ADC_CHANNEL_COUNT; i++) {
-        for (j = 0; j < ADC_BUFFER_SIZE; j++) {
-            // 处理adcBuffer[i][j]，例如打印到串口
-        }
+    /* If the interrupt status for Sequencer-2 is set the
+     * clear the status and read the data */
+    if((getIntStatus & ADC_INT_DMA_SS2) == ADC_INT_DMA_SS2)
+    {
+        /* Clear the ADC interrupt flag. */
+        MAP_ADCIntClearEx(ADC0_BASE, ADC_INT_DMA_SS2);
+
+        /* Reconfigure the channel control structure and enable the channel */
+        MAP_uDMAChannelTransferSet(UDMA_CH16_ADC0_2 | UDMA_PRI_SELECT,
+                                   UDMA_MODE_BASIC,
+                                   (void *)&ADC0->SSFIFO2, (void *)&srcBuffer,
+                                   sizeof(srcBuffer)/2);
+
+        MAP_uDMAChannelEnable(UDMA_CH16_ADC0_2);
+
+        /* Set conversion flag to true */
+        bgetConvStatus = true;
     }
 }
-

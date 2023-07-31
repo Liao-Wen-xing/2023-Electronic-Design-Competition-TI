@@ -1,19 +1,19 @@
 /***********************************************
-*            OLED�õ��ĺ�������
+*            OLED锟矫碉拷锟侥猴拷锟斤拷锟斤拷锟斤拷
 ***********************************************/
 
 //              ----------------------------------------------------------------
-//              GND    ��Դ��
-//              VCC   ��3.3v��Դ
-//              SCL   P4.0��ʱ�ӣ�
-//              SDA   P3.2�����ݣ�
+//              GND    锟斤拷源锟斤拷
+//              VCC   锟斤拷3.3v锟斤拷源
+//              SCL   P4.0锟斤拷时锟接ｏ拷
+//              SDA   P3.2锟斤拷锟斤拷锟捷ｏ拷
 //              ----------------------------------------------------------------
 #include "oled.h"
 //#include "stdlib.h"
 #include "oledfont.h"
 //#include "delay.h"
-//OLED���Դ�
-//��Ÿ�ʽ����.
+//OLED锟斤拷锟皆达拷
+//锟斤拷鸥锟绞斤拷锟斤拷锟�.
 //[0]0 1 2 3 ... 127
 //[1]0 1 2 3 ... 127
 //[2]0 1 2 3 ... 127
@@ -29,7 +29,7 @@
 #define OLED_SDIN_Set()  MAP_GPIOPinWrite(GPIO_OLED_DAT_PORT_BASE,GPIO_OLED_DAT_PIN,0xFF) //OLED_SDIN=1;
 
 
-void init()                                           //OLED�˿ڶ���
+void init()                                           //OLED锟剿口讹拷锟斤拷
 {
 
 }
@@ -46,9 +46,9 @@ void init()                                           //OLED�˿ڶ���
     return;
 }*/
 
-//��SSH1106д��һ���ֽڡ�
-//dat:Ҫд�������/����
-//cmd:����/�����־ 0,��ʾ����;1,��ʾ����;
+//锟斤拷SSH1106写锟斤拷一锟斤拷锟街节★拷
+//dat:要写锟斤拷锟斤拷锟斤拷锟�/锟斤拷锟斤拷
+//cmd:锟斤拷锟斤拷/锟斤拷锟斤拷锟街� 0,锟斤拷示锟斤拷锟斤拷;1,锟斤拷示锟斤拷锟斤拷;
 
 /**********************************************
 //IIC Start
@@ -150,50 +150,50 @@ void OLED_WR_Byte(u8 dat,u8 cmd)
 
 
 
-//��������
+//锟斤拷锟斤拷锟斤拷锟斤拷
 void OLED_Set_Pos(unsigned char x, unsigned char y)
 {
     OLED_WR_Byte(0xb0+y,OLED_CMD);
     OLED_WR_Byte((((x+2)&0xf0)>>4)|0x10,OLED_CMD);
     OLED_WR_Byte(((x+2)&0x0f),OLED_CMD);
 }
-//����OLED��ʾ
+//锟斤拷锟斤拷OLED锟斤拷示
 void OLED_Display_On(void)
 {
-    OLED_WR_Byte(0X8D,OLED_CMD);  //SET DCDC����
+    OLED_WR_Byte(0X8D,OLED_CMD);  //SET DCDC锟斤拷锟斤拷
     OLED_WR_Byte(0X14,OLED_CMD);  //DCDC ON
     OLED_WR_Byte(0XAF,OLED_CMD);  //DISPLAY ON
 }
-//�ر�OLED��ʾ
+//锟截憋拷OLED锟斤拷示
 void OLED_Display_Off(void)
 {
-    OLED_WR_Byte(0X8D,OLED_CMD);  //SET DCDC����
+    OLED_WR_Byte(0X8D,OLED_CMD);  //SET DCDC锟斤拷锟斤拷
     OLED_WR_Byte(0X10,OLED_CMD);  //DCDC OFF
     OLED_WR_Byte(0XAE,OLED_CMD);  //DISPLAY OFF
 }
-//��������,������,������Ļ�Ǻ�ɫ��
+//锟斤拷锟斤拷锟斤拷锟斤拷,锟斤拷锟斤拷锟斤拷,锟斤拷锟斤拷锟斤拷幕锟角猴拷色锟斤拷
 void OLED_Clear(void)
 {
     u8 i,n;
     for(i=0;i<8;i++)
     {
-        OLED_WR_Byte (0xb0+i,OLED_CMD);    //����ҳ��ַ��0~7��
-        OLED_WR_Byte (0x02,OLED_CMD);      //������ʾλ�á��е͵�ַ
-        OLED_WR_Byte (0x10,OLED_CMD);      //������ʾλ�á��иߵ�ַ
+        OLED_WR_Byte (0xb0+i,OLED_CMD);    //锟斤拷锟斤拷页锟斤拷址锟斤拷0~7锟斤拷
+        OLED_WR_Byte (0x02,OLED_CMD);      //锟斤拷锟斤拷锟斤拷示位锟矫★拷锟叫低碉拷址
+        OLED_WR_Byte (0x10,OLED_CMD);      //锟斤拷锟斤拷锟斤拷示位锟矫★拷锟叫高碉拷址
         for(n=0;n<128;n++)OLED_WR_Byte(0,OLED_DATA);
-    } //������ʾ
+    } //锟斤拷锟斤拷锟斤拷示
 }
 
 
-//��ָ��λ����ʾһ���ַ�,���������ַ�
+//锟斤拷指锟斤拷位锟斤拷锟斤拷示一锟斤拷锟街凤拷,锟斤拷锟斤拷锟斤拷锟斤拷锟街凤拷
 //x:0~127
 //y:0~63
-//mode:0,������ʾ;1,������ʾ
-//size:ѡ������ 16/12
+//mode:0,锟斤拷锟斤拷锟斤拷示;1,锟斤拷锟斤拷锟斤拷示
+//size:选锟斤拷锟斤拷锟斤拷 16/12
 void OLED_ShowChar(u8 x,u8 y,u8 chr)
 {
     unsigned char c=0,i=0;
-        c=chr-' ';//�õ�ƫ�ƺ��ֵ
+        c=chr-' ';//锟矫碉拷偏锟狡猴拷锟街�
         if(x>Max_Column-1){x=0;y=y+2;}
         if(SIZE ==16)
             {
@@ -211,19 +211,19 @@ void OLED_ShowChar(u8 x,u8 y,u8 chr)
 
             }
 }
-//m^n����
+//m^n锟斤拷锟斤拷
 u32 oled_pow(u8 m,u8 n)
 {
     u32 result=1;
     while(n--)result*=m;
     return result;
 }
-//��ʾ2������
-//x,y :�������
-//len :���ֵ�λ��
-//size:�����С
-//mode:ģʽ   0,���ģʽ;1,����ģʽ
-//num:��ֵ(0~4294967295);
+//锟斤拷示2锟斤拷锟斤拷锟斤拷
+//x,y :锟斤拷锟斤拷锟斤拷锟�
+//len :锟斤拷锟街碉拷位锟斤拷
+//size:锟斤拷锟斤拷锟叫�
+//mode:模式   0,锟斤拷锟侥Ｊ�;1,锟斤拷锟斤拷模式
+//num:锟斤拷值(0~4294967295);
 void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len)
 {
     u8 t,temp,m=0;
@@ -239,6 +239,33 @@ void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len)
                   OLED_ShowChar(x+(16/2+m)*t,y,temp+'0');
                 }
       }
+}
+
+void OLED_ShowSignedNum(u8 x,u8 y,int32_t num,u8 len)
+{
+    u8 t,temp,m=0;
+    if(num>0)
+    {
+        OLED_ShowChar(x,y,'+');
+        num=num;
+    }
+    else
+    {
+        OLED_ShowChar(x,y,'-');
+        num=-num;
+    }
+        for(t=0;t<len;t++)
+        {
+            temp=(num/oled_pow(10,len-t-1))%10;
+                if(temp==0)
+                {
+                    OLED_ShowChar(x+8+(16/2+m)*t,y,'0');
+                }
+                else
+                {
+                  OLED_ShowChar(x+8+(16/2+m)*t,y,temp+'0');
+                }
+        }
 }
 /******************************************************************************
 * ??:Disp---AD
@@ -263,7 +290,7 @@ void DispADC_DATA(u8 x,u8 y,u32 DispData)
 	OLED_ShowNum(x+32,y,bit1,1);
 	
    }
-//��ʾһ���ַ��Ŵ�
+//锟斤拷示一锟斤拷锟街凤拷锟脚达拷
 void OLED_ShowString(u8 x,u8 y,u8 *chr)
 {
     unsigned char j=0;
@@ -274,7 +301,7 @@ void OLED_ShowString(u8 x,u8 y,u8 *chr)
             j++;
     }
 }
-//��ʾ����
+//锟斤拷示锟斤拷锟斤拷
 void OLED_ShowCHinese(u8 x,u8 y,u8 no)
 {
     u8 t,adder=0;
@@ -291,7 +318,7 @@ void OLED_ShowCHinese(u8 x,u8 y,u8 no)
                 adder+=1;
       }
 }
-//��ʾ��ʾBMPͼƬ128��64��ʼ������(x,y),x�ķ�Χ0��127��yΪҳ�ķ�Χ0��7
+//锟斤拷示锟斤拷示BMP图片128锟斤拷64锟斤拷始锟斤拷锟斤拷锟斤拷(x,y),x锟侥凤拷围0锟斤拷127锟斤拷y为页锟侥凤拷围0锟斤拷7
 void OLED_DrawBMP(unsigned char x0, unsigned char y0,unsigned char x1, unsigned char y1,unsigned char BMP[])
 {
  unsigned int j=0;
@@ -308,7 +335,7 @@ void OLED_DrawBMP(unsigned char x0, unsigned char y0,unsigned char x1, unsigned 
         }
     }
 }
-//����ʼ���꣨x��y����ʼ��ʾ�ַ���
+//锟斤拷锟斤拷始锟斤拷锟疥（x锟斤拷y锟斤拷锟斤拷始锟斤拷示锟街凤拷锟斤拷
 void LCD_P8x16Str(unsigned char x,unsigned char y,unsigned char ch[])
 {
   unsigned char c=0,i=0,j=0;
@@ -328,7 +355,7 @@ void LCD_P8x16Str(unsigned char x,unsigned char y,unsigned char ch[])
   }
 }
 
-//��ʼ��SSH1106
+//锟斤拷始锟斤拷SSH1106
 void OLED_Init(void)
 {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
@@ -345,8 +372,8 @@ void OLED_Init(void)
     OLED_WR_Byte(0x40,OLED_CMD);//--set start line address  Set Mapping RAM Display Start Line (0x00~0x3F)
     OLED_WR_Byte(0x81,OLED_CMD);//--set contrast control register
     OLED_WR_Byte(0xCF,OLED_CMD); // Set SEG Output Current Brightness
-    OLED_WR_Byte(0xA1,OLED_CMD);//--Set SEG/Column Mapping     0xa0���ҷ��� 0xa1����
-    OLED_WR_Byte(0xC8,OLED_CMD);//Set COM/Row Scan Direction   0xc0���·��� 0xc8����
+    OLED_WR_Byte(0xA1,OLED_CMD);//--Set SEG/Column Mapping     0xa0锟斤拷锟揭凤拷锟斤拷 0xa1锟斤拷锟斤拷
+    OLED_WR_Byte(0xC8,OLED_CMD);//Set COM/Row Scan Direction   0xc0锟斤拷锟铰凤拷锟斤拷 0xc8锟斤拷锟斤拷
     OLED_WR_Byte(0xA6,OLED_CMD);//--set normal display
     OLED_WR_Byte(0xA8,OLED_CMD);//--set multiplex ratio(1 to 64)
     OLED_WR_Byte(0x3f,OLED_CMD);//--1/64 duty

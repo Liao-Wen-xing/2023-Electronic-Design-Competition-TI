@@ -10,8 +10,7 @@
 
 
 void ADC_Configuration(void);
-void ADC_GetData(void);
-void ADC_ProcessData(void);
+
 
 
 #endif /* HARDWARE_ADC_H_ */
