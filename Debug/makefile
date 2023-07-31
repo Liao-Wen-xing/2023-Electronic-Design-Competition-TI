@@ -143,21 +143,21 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-AAA_car.out \
+2023-Electronic-Design-Competition-TI.out \
 
 EXE_OUTPUTS__QUOTED += \
-"AAA_car.out" \
+"2023-Electronic-Design-Competition-TI.out" \
 
 
 # All Target
 all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
-	@$(MAKE) --no-print-directory -Onone "AAA_car.out"
+	@$(MAKE) --no-print-directory -Onone "2023-Electronic-Design-Competition-TI.out"
 
 # Tool invocations
-AAA_car.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
+2023-Electronic-Design-Competition-TI.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
-	"D:/ti_IDE/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=none --define=DeviceFamily_MSP432E4 --define=__MSP432E401Y__ -g --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on -z -m"AAA_car.map" --stack_size=512 -i"D:/TI/simplelink_msp432e4_sdk_3_40_01_02/source" -i"D:/ti_IDE/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" --diag_wrap=off --display_error_number --warn_sections --xml_link_info="AAA_car_linkInfo.xml" --rom_model -o "AAA_car.out" $(ORDERED_OBJS)
+	"D:/ti_IDE/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=none --define=DeviceFamily_MSP432E4 --define=__MSP432E401Y__ -g --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on -z -m"2023-Electronic-Design-Competition-TI.map" --stack_size=512 -i"D:/TI/simplelink_msp432e4_sdk_3_40_01_02/source" -i"D:/ti_IDE/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" --diag_wrap=off --display_error_number --warn_sections --xml_link_info="2023-Electronic-Design-Competition-TI_linkInfo.xml" --rom_model -o "2023-Electronic-Design-Competition-TI.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 

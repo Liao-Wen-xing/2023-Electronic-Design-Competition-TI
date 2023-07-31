@@ -59,16 +59,16 @@ main.obj: D:/TI/simplelink_msp432e4_sdk_3_40_01_02/source/ti/devices/msp432e4/dr
 main.obj: D:/TI/simplelink_msp432e4_sdk_3_40_01_02/source/ti/devices/msp432e4/driverlib/udma.h
 main.obj: D:/TI/simplelink_msp432e4_sdk_3_40_01_02/source/ti/devices/msp432e4/driverlib/usb.h
 main.obj: D:/TI/simplelink_msp432e4_sdk_3_40_01_02/source/ti/devices/msp432e4/driverlib/watchdog.h
-main.obj: D:/MCU/msp/msp432/AAA_car/Hardware/ADC.h
-main.obj: D:/MCU/msp/msp432/AAA_car/Hardware/OLED.h
+main.obj: D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/ADC.h
+main.obj: D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/OLED.h
 main.obj: D:/ti_IDE/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdio.h
 main.obj: D:/ti_IDE/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdarg.h
-main.obj: D:/MCU/msp/msp432/AAA_car/Hardware/DCMotor.h
-main.obj: D:/MCU/msp/msp432/AAA_car/System/Motor_Con.h
-main.obj: D:/MCU/msp/msp432/AAA_car/Hardware/Key.h
-main.obj: D:/MCU/msp/msp432/AAA_car/System/Timer.h
-main.obj: D:/MCU/msp/msp432/AAA_car/Hardware/Encoder.h
-main.obj: D:/MCU/msp/msp432/AAA_car/Hardware/Sevor.h
+main.obj: D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/DCMotor.h
+main.obj: D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/System/Motor_Con.h
+main.obj: D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/Key.h
+main.obj: D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/System/Timer.h
+main.obj: D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/Encoder.h
+main.obj: D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/Sevor.h
 
 ../main.c:
 
@@ -188,23 +188,23 @@ D:/TI/simplelink_msp432e4_sdk_3_40_01_02/source/ti/devices/msp432e4/driverlib/us
 
 D:/TI/simplelink_msp432e4_sdk_3_40_01_02/source/ti/devices/msp432e4/driverlib/watchdog.h:
 
-D:/MCU/msp/msp432/AAA_car/Hardware/ADC.h:
+D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/ADC.h:
 
-D:/MCU/msp/msp432/AAA_car/Hardware/OLED.h:
+D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/OLED.h:
 
 D:/ti_IDE/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdio.h:
 
 D:/ti_IDE/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdarg.h:
 
-D:/MCU/msp/msp432/AAA_car/Hardware/DCMotor.h:
+D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/DCMotor.h:
 
-D:/MCU/msp/msp432/AAA_car/System/Motor_Con.h:
+D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/System/Motor_Con.h:
 
-D:/MCU/msp/msp432/AAA_car/Hardware/Key.h:
+D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/Key.h:
 
-D:/MCU/msp/msp432/AAA_car/System/Timer.h:
+D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/System/Timer.h:
 
-D:/MCU/msp/msp432/AAA_car/Hardware/Encoder.h:
+D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/Encoder.h:
 
-D:/MCU/msp/msp432/AAA_car/Hardware/Sevor.h:
+D:/MCU/msp/msp432/2023-Electronic-Design-Competition-TI/Hardware/Sevor.h:
 

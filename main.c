@@ -58,7 +58,7 @@ int main(void)
         {
             Key_Num = Key_temp;
         }*/
-        OLED_ShowChar(0,0,'1');
+        OLED_ShowChar(0,0,'2');
     }
 }
 
